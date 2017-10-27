@@ -85,13 +85,43 @@ DATABASES = {
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 # Cache configuration
-CACHE_TYPE = 'db'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    'locmem': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'TIMEOUT': 60
+    },
+    'memcache': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'localhost:11211',
+        'TIMEOUT': 60
+    },
+    'dummy': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    },
+    'db': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'TIMEOUT': 10,
+        'LOCATION': 'my_cache_table'
+    },
+    'filesystem': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/home/ivo/Code/blog/cache_for_speed_with_django/demo/CacheDemo/',
+    },
+    'redis': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 0),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,  # mimics memcache behavior.
+                                        # http://niwinz.github.io/django-redis/latest/#_memcached_exceptions_behavior
+        }
+    },
+    'redis_cache': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '{0}/{1}'.format(env('REDIS_URL', default='redis://127.0.0.1:6379'), 0),
+    },
 
-if CACHE_TYPE == 'dummy':
-    from .cache.dummy import *
-
-if CACHE_TYPE == 'locmem':
-    from .cache.locmem import *
-
-if CACHE_TYPE == 'db':
-    from .cache.db import *
+}

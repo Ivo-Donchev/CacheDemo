@@ -1,5 +1,15 @@
 from django.conf.urls import url
-from .views import IndexView, CachedView
+from .views import (
+    IndexView,
+    RedisView,
+    DBCachedView,
+    MemcachedView,
+    RedisCacheView,
+    LocMemCachedView,
+    DummyDummyCachedView,
+    FileSystemCachedView,
+    RaceCondLocMemCachedView
+)
 
 urlpatterns = [
     url(
@@ -8,8 +18,43 @@ urlpatterns = [
         name='index'
     ),
     url(
-        regex=r'^cached/$',
-        view=CachedView.as_view(),
-        name='index'
-    )
+        regex=r'^dummy-cached/$',
+        view=DummyDummyCachedView.as_view(),
+        name='dummy-index'
+    ),
+    url(
+        regex=r'^db-cached/$',
+        view=DBCachedView.as_view(),
+        name='db-cached-index'
+    ),
+    url(
+        regex=r'^locmem-cached/$',
+        view=LocMemCachedView.as_view(),
+        name='locmem-cached-index'
+    ),
+    url(
+        regex=r'^locmem-cached-test/$',
+        view=RaceCondLocMemCachedView.as_view(),
+        name='locmem-cached-index-test'
+    ),
+    url(
+        regex=r'^mem-cached/$',
+        view=MemcachedView.as_view(),
+        name='mem-cached-index'
+    ),
+    url(
+        regex=r'^file-system-cached/$',
+        view=FileSystemCachedView.as_view(),
+        name='file-system-cached-index'
+    ),
+    url(
+        regex=r'^redis/$',
+        view=RedisView.as_view(),
+        name='redis-index'
+    ),
+    url(
+        regex=r'^redis-cache/$',
+        view=RedisCacheView.as_view(),
+        name='redis-cached-index'
+    ),
 ]
